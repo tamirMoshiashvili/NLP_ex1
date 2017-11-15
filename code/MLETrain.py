@@ -1,6 +1,11 @@
 import sys
 from collections import Counter
 
+"""
+TODO: Complete te needed functions specified in assignment of HMM task-1
+      Organize the current main-function
+"""
+
 if __name__ == '__main__':
     args = sys.argv[1:]
 
