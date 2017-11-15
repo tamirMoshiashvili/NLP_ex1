@@ -15,12 +15,18 @@ if __name__ == '__main__':
         # first 2 items - e.mle update
         prev_2 = next(words_iter).rsplit('/', 1)
         tag2 = prev_2[1]
-        prev_1 = next(words_iter).rsplit('/', 1)
-        tag1 = prev_1[1]
-        e_mle_counter.update([(prev_2[0], tag2), (prev_1[0], tag1)])
+        tag1 = None
+        try:
+            prev_1 = next(words_iter).rsplit('/', 1)
+            tag1 = prev_1[1]
+            e_mle_counter.update([(prev_2[0], tag2), (prev_1[0], tag1)])
 
-        # first 2 items - q.mle update
-        q_mle_counter.update([(tag2,), (tag1,), (tag2, tag1)])
+            # first 2 items - q.mle update
+            q_mle_counter.update([(tag2,), (tag1,), (tag2, tag1)])
+        except StopIteration:
+            # in case of short sentences of one word
+            e_mle_counter.update([(prev_2[0], tag2)])
+            q_mle_counter.update([(tag2,)])
 
         for item in words_iter:
             word, tag = item.rsplit('/', 1)
