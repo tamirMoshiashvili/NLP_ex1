@@ -15,40 +15,42 @@ if __name__ == '__main__':
         # first 2 items - e.mle update
         prev_2 = next(words_iter).rsplit('/', 1)
         tag2 = prev_2[1]
-        e_mle_counter.update((prev_2[0], tag2))
-
         prev_1 = next(words_iter).rsplit('/', 1)
         tag1 = prev_1[1]
-        e_mle_counter.update((prev_1[0], tag1))
+        e_mle_counter.update([(prev_2[0], tag2), (prev_1[0], tag1)])
 
         # first 2 items - q.mle update
-        q_mle_counter.update([tag2, tag1, (tag2, tag1)])
+        q_mle_counter.update([(tag2,), (tag1,), (tag2, tag1)])
 
         for item in words_iter:
             word, tag = item.rsplit('/', 1)
 
             # e.mle update
-            e_mle_counter.update((word, tag))
+            e_mle_counter.update([(word, tag)])
 
             # q.mle update
-            q_mle_counter.update([tag, (tag1, tag), (tag2, tag1, tag)])
+            q_mle_counter.update([(tag,), (tag1, tag), (tag2, tag1, tag)])
 
             # update last 2 items
             tag2 = tag1
             tag1 = tag
 
-    # write to e.mle
-    e_mle_file = open(args[1], 'w')
-    for (word, tag), n in e_mle_counter.items():
-        e_mle_file.write(word + ' ' + tag + '\t' + str(n))
-    e_mle_file.close()
-
     # write to q.mle
-    q_mle_file = open(args[2], 'w')
+    q_mle_file = open(args[1], 'w')
     for tup, n in q_mle_counter.items():
-        for tag in list(tup):
-            q_mle_file.write(tag + ' ')
-        q_mle_file.write('\t' + str(n))
+        if len(tup) >= 1:
+            q_mle_file.write(tup[0])
+        if len(tup) >= 2:
+            q_mle_file.write(' ' + tup[1])
+        if len(tup) >= 3:
+            q_mle_file.write(' ' + tup[2])
+        q_mle_file.write('\t' + str(n) + '\n')
     q_mle_file.close()
+
+    # write to e.mle
+    e_mle_file = open(args[2], 'w')
+    for (word, tag), n in e_mle_counter.items():
+        e_mle_file.write(word + ' ' + tag + '\t' + str(n) + '\n')
+    e_mle_file.close()
 
     train_file.close()
