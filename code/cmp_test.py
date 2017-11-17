@@ -1,3 +1,6 @@
+import sys
+
+
 def read_file(filepath):
     f = open(filepath, 'r')
     lines = f.read().splitlines()
@@ -16,8 +19,8 @@ if __name__ == '__main__':
     good = bad = 0.0
 
     # extract text
-    test_words = read_file('/home/tamir/PycharmProjects/NLP_ex1/data/ass1-tagger-test-copy')
-    pred_words = read_file('output_file.txt')
+    test_words = read_file(sys.argv[1])
+    pred_words = read_file(sys.argv[2])
 
     # compare
     for (test, pred) in zip(test_words, pred_words):

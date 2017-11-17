@@ -1,3 +1,4 @@
+import random
 import sys
 from collections import Counter
 from time import time
@@ -5,7 +6,7 @@ from time import time
 
 def write_to_file_mle(counter, filename):
     mle_file = open(filename, 'w')
-    for tup, num in counter.items():
+    for tup, num in counter.iteritems():
         if len(tup) >= 1:
             mle_file.write(tup[0])
         if len(tup) >= 2:
@@ -29,18 +30,23 @@ if __name__ == '__main__':
     t = time()
 
     train_file = open(sys.argv[1], 'r')
+    lines = train_file.read().splitlines()
+    train_file.close()
     q_mle_counter = dict()
     e_mle_counter = dict()
 
-    for line in train_file.readlines():
+    for line in lines:
         words_iter = iter(line.split(' '))
 
         # first 2 items - e.mle update
         tag2 = tag1 = '_START_'
         add_to_counter(q_mle_counter, [(tag2,), (tag1,), (tag2, tag1)])
 
+        is_UNK_line = random.randint(1, 5) == 1
         for item in words_iter:
             word, tag = item.rsplit('/', 1)
+            if is_UNK_line:
+                word = '_UNK_'
 
             # update counters
             add_to_counter(e_mle_counter, [(word, tag)])
@@ -49,7 +55,6 @@ if __name__ == '__main__':
             # update last 2 tags
             tag2 = tag1
             tag1 = tag
-    train_file.close()
 
     # write to mle-files
     write_to_file_mle(q_mle_counter, sys.argv[2])

@@ -1,10 +1,13 @@
 import StringIO
 import sys
+from time import time
 
 from DataHandler import DataHandler
 
 
 if __name__ == '__main__':
+    t = time()
+
     args = sys.argv[1:]
     input_filename = args[0]
     q_mle_filename = args[1]
@@ -40,3 +43,5 @@ if __name__ == '__main__':
     out_file = open(out_filename, 'w')
     out_file.write(stream.getvalue())
     out_file.close()
+
+    print time() - t
