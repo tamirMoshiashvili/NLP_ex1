@@ -1,6 +1,14 @@
 from collections import Counter
 
 
+def is_number(var):
+    try:
+        float(var)
+        return True
+    except:
+        return False
+
+
 def smart_div(x, y):
     if y == 0:
         return 0
@@ -85,6 +93,8 @@ class DataHandler:
         self._suffix_counter = Counter()
         self.tags = set()
         self._count_special()
+        self._special_tags = set(tag for tag in self.tags if len(tag) == 1)
+        self._special_tags.update(['IN', 'TO', '\'\'', '``'])
 
     @property
     def tags(self):
@@ -103,11 +113,11 @@ class DataHandler:
         Fill the tag-set.
         """
         for word, tag_dict in self._e_counter.items():
-            # fill tag set
-            # self.tags.add(tag)
-
             # check for unknown word
             for tag, num in tag_dict.items():
+                # fill tag set
+                self.tags.add(tag)
+
                 # check for prefix
                 for prefix in self._prefixes:
                     if word.startswith(prefix):
@@ -169,6 +179,13 @@ class DataHandler:
     def get_optimal_tag(self, word, tag2, tag1):
         opt_tag = None
         p = 0
+
+        if is_number(word):
+            return 'CD'
+
+        word_up = word.upper()
+        if word_up in self._special_tags:
+            return word_up
 
         if word not in self._e_counter:
             word = '_UNK_'

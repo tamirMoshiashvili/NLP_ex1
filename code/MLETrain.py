@@ -3,6 +3,9 @@ import sys
 from collections import Counter
 from time import time
 
+START = '_START_'
+UNK = '_UNK_'
+
 
 def write_to_file_mle(counter, filename):
     mle_file = open(filename, 'w')
@@ -39,14 +42,14 @@ if __name__ == '__main__':
         words_iter = iter(line.split(' '))
 
         # first 2 items - e.mle update
-        tag2 = tag1 = '_START_'
+        tag2 = tag1 = START
         add_to_counter(q_mle_counter, [(tag2,), (tag1,), (tag2, tag1)])
 
-        is_UNK_line = random.randint(1, 5) == 1
+        is_UNK_line = random.randint(1, 2) == 1
         for item in words_iter:
             word, tag = item.rsplit('/', 1)
             if is_UNK_line:
-                word = '_UNK_'
+                word = UNK
 
             # update counters
             add_to_counter(e_mle_counter, [(word, tag)])

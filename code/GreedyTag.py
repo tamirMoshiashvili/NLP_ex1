@@ -1,9 +1,11 @@
 import StringIO
 import sys
 from time import time
-
 from DataHandler import DataHandler
 
+
+START = '_START_'
+UNK = '_UNK_'
 
 if __name__ == '__main__':
     t = time()
@@ -23,7 +25,7 @@ if __name__ == '__main__':
     stream = StringIO.StringIO()
     for line in lines:
         words = iter(line.split(' '))
-        tag2 = tag1 = '_START_'
+        tag2 = tag1 = START
 
         # first word of the line
         word0 = next(words)
