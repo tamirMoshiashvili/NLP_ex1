@@ -31,6 +31,6 @@ if __name__ == '__main__':
             good += 1
         else:
             bad += 1
-            print 'test: ' + t1 + ', pred: ' + t2
+            print w1 + ' test: ' + t1 + ', pred: ' + t2
 
     print good / (good + bad)

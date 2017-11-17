@@ -87,6 +87,7 @@ class DataHandler:
         # more data manipulation
         self._prefixes = ['anti', 'de', 'dis', 'en', 'em', 'fore', 'in', 'im', 'il', 'ir', 'mid', 'mis', 'non', 'over',
                           'pre', 're', 'semi', 'sub', 'super', 'trans', 'un']
+        self._prefixes.extend([pre.capitalize() for pre in self._prefixes])
         self._suffixes = ['ble', 'al', 'ed', 'en', 'er', 'est', 'ful', 'ic', 'ing', 'ion', 'ty', 'ive', 'less', 'ly',
                           'ment', 'ness', 'ous', 'es']
         self._prefix_counter = Counter()
@@ -143,6 +144,9 @@ class DataHandler:
         """
         return e(word | tag)
         """
+        if is_number(word) and tag == 'CD':
+            return 1
+
         first = 0
         e_word_dict = self._e_counter[word]
         if tag in e_word_dict:
@@ -178,7 +182,7 @@ class DataHandler:
 
     def get_optimal_tag(self, word, tag2, tag1):
         opt_tag = None
-        p = 0
+        p = -1
 
         if is_number(word):
             return 'CD'
