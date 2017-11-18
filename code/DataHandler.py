@@ -52,6 +52,7 @@ def concat(words):
 
 
 UNK = '_UNK_'
+START = '_START_'
 
 
 class DataHandler:
@@ -79,7 +80,7 @@ class DataHandler:
         """ :return: e(word | tag) """
         if word in self._e:
             if tag in self._e[word]:
-                return self._e[word][tag]
+                return self._e[word][tag] / self._get_q_value(tag)
         return eps
 
     def get_opt_tag(self, word, tag2, tag1):
@@ -90,6 +91,9 @@ class DataHandler:
             word = UNK
 
         for tag in self._e[word]:
+            # if tag == START:    # ignore predicting the tag as START
+            #     continue
+
             e = self.get_e_of(word, tag)
             q = self.get_q_of_tags(tag2, tag1, tag)
             eq = e * q

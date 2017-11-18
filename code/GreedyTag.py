@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
         w0 = next(words)
         tag = data_handler.get_opt_tag(w0, tag2, tag1)
-        stream.write(w0 + '/' + tag1)
+        stream.write(w0 + '/' + tag)
 
         for word in words:
             tag = data_handler.get_opt_tag(word, tag2, tag1)
