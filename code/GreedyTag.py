@@ -1,39 +1,42 @@
-import StringIO
 import sys
+from StringIO import StringIO
 from time import time
+
 from DataHandler import DataHandler
 
 
 START = '_START_'
-UNK = '_UNK_'
+
+
+def read_file(filename):
+    f = open(filename, 'r')
+    file_lines = f.read().splitlines()
+    f.close()
+    return file_lines
+
 
 if __name__ == '__main__':
     t = time()
 
-    args = sys.argv[1:]
-    input_filename = args[0]
-    q_mle_filename = args[1]
-    e_mle_filename = args[2]
-    out_filename = args[3]
+    input_filename = sys.argv[1]
+    q_filename = sys.argv[2]
+    e_filename = sys.argv[3]
+    output_filename = sys.argv[4]
 
-    # read input file
-    input_file = open(input_filename, 'r')
-    lines = input_file.read().splitlines()
-    input_file.close()
+    data_handler = DataHandler(q_filename, e_filename)
 
-    data_handler = DataHandler(q_mle_filename, e_mle_filename)
-    stream = StringIO.StringIO()
+    lines = read_file(input_filename)
+    stream = StringIO()
     for line in lines:
         words = iter(line.split(' '))
         tag2 = tag1 = START
 
-        # first word of the line
-        word0 = next(words)
-        tag1 = data_handler.get_optimal_tag(word0, tag2, tag1)
-        stream.write(word0 + '/' + tag1)
+        w0 = next(words)
+        tag = data_handler.get_opt_tag(w0, tag2, tag1)
+        stream.write(w0 + '/' + tag1)
 
         for word in words:
-            tag = data_handler.get_optimal_tag(word, tag2, tag1)
+            tag = data_handler.get_opt_tag(word, tag2, tag1)
             stream.write(' ' + word + '/' + tag)
 
             tag2 = tag1
@@ -42,7 +45,7 @@ if __name__ == '__main__':
         # end of line
         stream.write('\n')
 
-    out_file = open(out_filename, 'w')
+    out_file = open(output_filename, 'w')
     out_file.write(stream.getvalue())
     out_file.close()
 

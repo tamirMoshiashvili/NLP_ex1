@@ -1,203 +1,93 @@
-from collections import Counter
-
-
-def is_number(var):
-    try:
-        float(var)
-        return True
-    except:
-        return False
-
-
-def smart_div(x, y):
-    if y == 0:
-        return 0
-    return float(x) / y
-
-
-def add_to_counter(counter, keys):
-    for key in keys:
-        if key in counter:
-            counter[key] += 1
-        else:
-            counter[key] = 1
-
-
-def add_to_e_counter(counter, keys):
-    for word, (tag, num) in keys:
-        if word in counter:
-            if tag in counter[word]:
-                counter[word][tag] += num
-            else:
-                counter[word][tag] = num
-        else:
-            counter[word] = dict()
-            counter[word][tag] = num
+def read_file(filename):
+    f = open(filename, 'r')
+    file_lines = f.read().splitlines()
+    f.close()
+    return file_lines
 
 
 def get_e_counter(filename):
     counter = dict()
     total_words = 0
 
-    f = open(filename, 'r')
-    lines = f.read().splitlines()
-    f.close()
+    lines = read_file(filename)
 
     for line in lines:
         words, num = line.rsplit('\t', 1)
         word, tag = words.split(' ')
 
-        tag_dict = dict()
-        tag_dict[tag] = int(num)
-        total_words += tag_dict[tag]
+        if word in counter:
+            counter[word][tag] = float(num)
+        else:
+            tag_dict = dict()
+            tag_dict[tag] = float(num)
+            total_words += tag_dict[tag]
+            counter[word] = tag_dict
 
-        counter[word] = tag_dict
     return counter, total_words
 
 
 def get_q_counter(filename):
-    counter = Counter()
-
-    f = open(filename, 'r')
-    lines = f.read().splitlines()
-    f.close()
-
+    counter = dict()
+    lines = read_file(filename)
     for line in lines:
-        words, num = line.rsplit('\t', 1)
-        words = words.split(' ')
-
-        if len(words) == 1:
-            words = (words[0],)
-        else:
-            words = tuple(words)
-        counter[words] = int(num)
+        key, num = line.rsplit('\t', 1)
+        counter[key] = float(num)
     return counter
+
+
+eps = 1e-7
+
+
+def smart_div(x, y):
+    if y == 0:
+        return 1e-7
+    return float(x) / y
+
+
+def concat(words):
+    w1 = words[0]
+    for word in words[1:]:
+        w1 += ' ' + word
+    return w1
 
 
 class DataHandler:
     def __init__(self, q_filename, e_filename, lamdas=None):
-        # assign members
-        self._q_counter = get_q_counter(q_filename)
-        self._e_counter, self._total_words = get_e_counter(e_filename)
-        if lamdas:
-            self._lamdas = lamdas
-        else:
-            self._lamdas = [0.8, 0.15, 0.05]
+        if lamdas is None:
+            lamdas = [0.8, 0.15, 0.05]
+        self._q = get_q_counter(q_filename)
+        self._e, self._num_words = get_e_counter(e_filename)
+        self._lamdas = lamdas
 
-        # more data manipulation
-        self._prefixes = ['anti', 'de', 'dis', 'en', 'em', 'fore', 'in', 'im', 'il', 'ir', 'mid', 'mis', 'non', 'over',
-                          'pre', 're', 'semi', 'sub', 'super', 'trans', 'un']
-        self._prefixes.extend([pre.capitalize() for pre in self._prefixes])
-        self._suffixes = ['ble', 'al', 'ed', 'en', 'er', 'est', 'ful', 'ic', 'ing', 'ion', 'ty', 'ive', 'less', 'ly',
-                          'ment', 'ness', 'ous', 'es']
-        self._prefix_counter = Counter()
-        self._suffix_counter = Counter()
-        self.tags = set()
-        self._count_special()
-        self._special_tags = set(tag for tag in self.tags if len(tag) == 1)
-        self._special_tags.update(['IN', 'TO', '\'\'', '``'])
+    def _get_q_value(self, key):
+        if key in self._q:
+            return self._q[key]
+        return eps    # TODO maybe eps
 
-    @property
-    def tags(self):
-        return self.tags
-
-    @tags.setter
-    def tags(self, value):
-        pass
-
-    def _count_special(self):
-        """
-        Go over e_counter and check for:
-        - unknown words
-        - prefixes
-        - suffixes
-        Fill the tag-set.
-        """
-        for word, tag_dict in self._e_counter.items():
-            # check for unknown word
-            for tag, num in tag_dict.items():
-                # fill tag set
-                self.tags.add(tag)
-
-                # check for prefix
-                for prefix in self._prefixes:
-                    if word.startswith(prefix):
-                        add_to_counter(self._prefix_counter, [(prefix, tag)])
-                        break
-
-                # check for suffix
-                for suffix in self._suffixes:
-                    if word.endswith(suffix):
-                        add_to_counter(self._suffix_counter, [(suffix, tag)])
-                        break
-
-    def get_q(self, t1, t2, t3):
-        """
-        return q(t3 | t1, t2)
-        """
-        first = smart_div(self._q_counter[(t1, t2, t3)], self._q_counter[(t1, t2)])
-        second = smart_div(self._q_counter[(t2, t3)], self._q_counter[(t2,)])
-        third = smart_div(self._q_counter[(t3,)], self._total_words)
+    def get_q_of_tags(self, t1, t2, t3):
+        first = smart_div(self._get_q_value(concat([t1, t2, t3])), self._get_q_value(concat([t1, t2])))
+        second = smart_div(self._get_q_value(concat([t2, t3])), self._get_q_value(t2))
+        third = smart_div(self._get_q_value(t3), self._num_words)
         return self._lamdas[0] * first + self._lamdas[1] * second + self._lamdas[2] * third
 
-    def get_e(self, word, tag):
-        """
-        return e(word | tag)
-        """
-        if is_number(word) and tag == 'CD':
-            return 1
+    def get_e_of(self, word, tag):
+        if word in self._e:
+            if tag in self._e[word]:
+                return self._e[word][tag]
+        return eps
 
-        first = 0
-        e_word_dict = self._e_counter[word]
-        if tag in e_word_dict:
-            first = e_word_dict[tag]
-
-        if first == 0:  # the given word is unknown
-            # unk counting
-            unk_c = self._e_counter['_UNK_'][tag]
-
-            # prefix counting
-            prefix_c = 0
-            for prefix in self._prefixes:
-                if word.startswith(prefix):
-                    prefix_c = self._prefix_counter[(prefix, tag)]
-                    break
-
-            # suffix counting
-            suffix_c = 0
-            for suffix in self._suffixes:
-                if word.endswith(suffix):
-                    suffix_c = self._suffix_counter[(suffix, tag)]
-                    break
-
-            first = (unk_c + prefix_c + suffix_c) / 3.0
-
-            # get the max of them
-            # TODO: maybe set 'first' as the average of three of them
-            # first = max([unk_c, prefix_c, suffix_c])
-
-        second = self._q_counter[(tag,)]
-        p = smart_div(first, second)
-        return p
-
-    def get_optimal_tag(self, word, tag2, tag1):
+    def get_opt_tag(self, word, tag2, tag1):
         opt_tag = None
-        p = -1
+        p = 0
 
-        if is_number(word):
-            return 'CD'
+        if word not in self._e:
+            return '.'  # TODO change to unk
 
-        word_up = word.upper()
-        if word_up in self._special_tags:
-            return word_up
-
-        if word not in self._e_counter:
-            word = '_UNK_'
-        for tag in self._e_counter[word]:
-            e = self.get_e(word, tag)
-            q = self.get_q(tag2, tag1, tag)
-            e_q = e * q
-            if e_q > p:
+        for tag in self._e[word]:
+            e = self.get_e_of(word, tag)
+            q = self.get_q_of_tags(tag2, tag1, tag)
+            eq = e * q
+            if eq > p:
+                p = eq
                 opt_tag = tag
-                p = e_q
         return opt_tag
