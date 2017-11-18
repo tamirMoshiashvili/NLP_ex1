@@ -51,6 +51,9 @@ def concat(words):
     return w1
 
 
+UNK = '_UNK_'
+
+
 class DataHandler:
     def __init__(self, q_filename, e_filename, lamdas=None):
         if lamdas is None:
@@ -62,7 +65,7 @@ class DataHandler:
     def _get_q_value(self, key):
         if key in self._q:
             return self._q[key]
-        return eps    # TODO maybe eps
+        return eps
 
     def get_q_of_tags(self, t1, t2, t3):
         first = smart_div(self._get_q_value(concat([t1, t2, t3])), self._get_q_value(concat([t1, t2])))
@@ -81,7 +84,7 @@ class DataHandler:
         p = 0
 
         if word not in self._e:
-            return '.'  # TODO change to unk
+            word = UNK
 
         for tag in self._e[word]:
             e = self.get_e_of(word, tag)
