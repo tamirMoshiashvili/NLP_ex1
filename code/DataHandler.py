@@ -35,9 +35,6 @@ def get_q_counter(filename):
     return counter
 
 
-eps = 1e-7
-
-
 def smart_div(x, y):
     if y == 0:
         return 1e-7
@@ -51,6 +48,16 @@ def concat(words):
     return w1
 
 
+def is_number(var):
+    var = var.replace(',', '').replace(':', '').replace('-', '')
+    try:
+        float(var)
+        return True
+    except:
+        return False
+
+
+eps = 1e-7
 UNK = '_UNK_'
 START = '_START_'
 
@@ -86,6 +93,9 @@ class DataHandler:
     def get_opt_tag(self, word, tag2, tag1):
         opt_tag = None
         p = 0
+
+        if is_number(word):
+            return 'CD'
 
         if word not in self._e:
             word = UNK
