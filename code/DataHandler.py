@@ -63,17 +63,20 @@ class DataHandler:
         self._lamdas = lamdas
 
     def _get_q_value(self, key):
+        """ :return: q[key] """
         if key in self._q:
             return self._q[key]
         return eps
 
     def get_q_of_tags(self, t1, t2, t3):
+        """ :return: q(t3 | t1, t2) """
         first = smart_div(self._get_q_value(concat([t1, t2, t3])), self._get_q_value(concat([t1, t2])))
         second = smart_div(self._get_q_value(concat([t2, t3])), self._get_q_value(t2))
         third = smart_div(self._get_q_value(t3), self._num_words)
         return self._lamdas[0] * first + self._lamdas[1] * second + self._lamdas[2] * third
 
     def get_e_of(self, word, tag):
+        """ :return: e(word | tag) """
         if word in self._e:
             if tag in self._e[word]:
                 return self._e[word][tag]

@@ -22,6 +22,9 @@ def add_to_counter(counter, keys):
 
 
 def read_file(filename):
+    """
+    :return list of lines.
+    """
     f = open(filename, 'r')
     file_lines = f.read().splitlines()
     f.close()
@@ -41,7 +44,7 @@ if __name__ == '__main__':
 
         add_to_counter(q, [tag2, tag1, tag2 + ' ' + tag1])
 
-        is_UNK_line = random.randint(1, 2) == 1
+        is_UNK_line = random.randint(1, 200) == 1
         for pair in pairs:
             word, tag = pair.rsplit('/', 1)
             if is_UNK_line:
