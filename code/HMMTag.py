@@ -4,7 +4,6 @@ from time import time
 
 from DataHandler import DataHandler
 
-
 START = '_START_'
 
 
@@ -29,6 +28,7 @@ if __name__ == '__main__':
     stream = StringIO()
 
     for line in lines:
+        line = line.split(' ')
         tags = data_handler.get_tags_viterbi(line)
 
         word = line[0]
@@ -36,7 +36,8 @@ if __name__ == '__main__':
         stream.write(word + '/' + tag)
 
         for word, tag in zip(line[1:], tags[1:]):
-            stream.write(' ' + word + '/' + tag + '\n')
+            stream.write(' ' + word + '/' + tag)
+        stream.write('\n')
 
     out_file = open(output_filename, 'w')
     out_file.write(stream.getvalue())

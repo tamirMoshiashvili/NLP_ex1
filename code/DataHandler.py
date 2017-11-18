@@ -8,12 +8,14 @@ def read_file(filename):
 def get_e_counter(filename):
     counter = dict()
     total_words = 0
+    tagset = set()
 
     lines = read_file(filename)
 
     for line in lines:
         words, num = line.rsplit('\t', 1)
         word, tag = words.split(' ')
+        tagset.add(tag)
 
         if word in counter:
             counter[word][tag] = float(num)
@@ -23,7 +25,7 @@ def get_e_counter(filename):
             total_words += tag_dict[tag]
             counter[word] = tag_dict
 
-    return counter, total_words
+    return counter, tagset, total_words
 
 
 def get_q_counter(filename):
@@ -57,6 +59,12 @@ def is_number(var):
         return False
 
 
+def argmax(d):
+    v = list(d.values())
+    k = list(d.keys())
+    return k[v.index(max(v))]
+
+
 eps = 1e-7
 UNK = '_UNK_'
 START = '_START_'
@@ -67,8 +75,9 @@ class DataHandler:
         if lamdas is None:
             lamdas = [0.8, 0.15, 0.05]
         self._q = get_q_counter(q_filename)
-        self._e, self._num_words = get_e_counter(e_filename)
+        self._e, self._tag_set, self._num_words = get_e_counter(e_filename)
         self._lamdas = lamdas
+        self._tag_set.add(START)
 
     def _get_q_value(self, key):
         """ :return: q[key] """
@@ -111,3 +120,58 @@ class DataHandler:
                 p = eq
                 opt_tag = tag
         return opt_tag
+
+    def get_tags_viterbi(self, line):
+        n = len(line) - 1
+        bp = [{} for word in line] + [{}]
+        v = [{} for word in line] + [{}]
+        for t in self._tag_set:
+            v[0][t] = {}
+            for r in self._tag_set:
+                v[0][t][r] = 0
+        v[0][START][START] = 1
+
+        prev_prev_tag_set = [START]
+        prev_tag_set = [START]
+        for i in range(0, n + 1):
+            word = line[i]
+            curr_tag_set = self._tag_set
+            if word in self._e:
+                curr_tag_set = self._e[word].keys()
+
+            bp[i + 1] = {}
+            v[i + 1] = {}
+            for t in prev_tag_set:
+                bp[i + 1][t] = {}
+                v[i + 1][t] = {}
+                for r in curr_tag_set:
+                    l = {}
+                    for tt in prev_prev_tag_set:
+                        l[tt] = v[i][tt][t] * self.get_e_of(word, r) * self.get_q_of_tags(tt, t, r)
+
+                    v[i + 1][t][r] = max(list(l.values()))
+                    bp[i + 1][t][r] = argmax(l)
+
+            prev_prev_tag_set = prev_tag_set
+            prev_tag_set = curr_tag_set
+
+        bp.pop(0)
+        v.pop(0)
+
+        end_matrix = map(lambda x: x.values(), v[n].values())
+
+        max_end = list(map(max, end_matrix))
+        max_v = max(max_end)
+
+        max_t_index = max_end.index(max_v)
+        max_t = list(v[n].keys())[max_t_index]
+        max_r = argmax(v[n][max_t])
+
+        y = [0 for i in range(0, n + 1)]
+        y[n] = max_r
+        y[n - 1] = max_t
+
+        for i in reversed(range(0, n - 1)):
+            y[i] = bp[i + 2][y[i + 1]][y[i + 2]]
+
+        return y
