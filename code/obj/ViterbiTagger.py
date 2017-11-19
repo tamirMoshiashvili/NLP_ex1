@@ -20,10 +20,10 @@ class ViterbiTagger:
         n = len(line) - 1
         bp = [{} for _ in line] + [{}]
         v = [{} for _ in line] + [{}]
-        for t in self.dh.tag_set:
-            v[0][t] = {}
+        for prev_tag in self.dh.tag_set:
+            v[0][prev_tag] = {}
             for r in self.dh.tag_set:
-                v[0][t][r] = 0
+                v[0][prev_tag][r] = 0
         v[0][START][START] = 1
 
         prev_prev_tag_set = [START]
@@ -36,16 +36,17 @@ class ViterbiTagger:
 
             bp[i + 1] = {}
             v[i + 1] = {}
-            for t in prev_tag_set:
-                bp[i + 1][t] = {}
-                v[i + 1][t] = {}
+            for prev_tag in prev_tag_set:
+                bp[i + 1][prev_tag] = {}
+                v[i + 1][prev_tag] = {}
                 for r in curr_tag_set:
                     l = {}
-                    for tt in prev_prev_tag_set:
-                        l[tt] = v[i][tt][t] * self.dh.get_score(word, tt, t, r)
+                    for prev_prev_tag in prev_prev_tag_set:
+                        l[prev_prev_tag] = v[i][prev_prev_tag][prev_tag] *\
+                                           self.dh.get_score(word, prev_prev_tag, prev_tag, r)
 
-                    v[i + 1][t][r] = max(list(l.values()))
-                    bp[i + 1][t][r] = argmax(l)
+                    v[i + 1][prev_tag][r] = max(list(l.values()))
+                    bp[i + 1][prev_tag][r] = argmax(l)
 
             prev_prev_tag_set = prev_tag_set
             prev_tag_set = curr_tag_set
