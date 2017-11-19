@@ -71,6 +71,11 @@ def is_rare(counter, w):
 
 
 def fill_with_rareness_features(features_dict, counter, w):
+    """
+    :param features_dict: features dictionary.
+    :param counter: counter dictionary for words.
+    :param w: word.
+    """
     if is_rare(counter, w):
         features_dict['contains_hyphen'] = '-' in w
         features_dict['contains_number'] = any(char.isdigit() for char in w)
@@ -112,11 +117,13 @@ if __name__ == '__main__':
     lines = read_file(input_filename)
     words_counter = get_words_counter(lines)
     stream = StringIO()
+
     for line in lines:
         features = {}
         for i, (word, tag) in enumerate(line):
             fill_with_regular_features(features, line, i)
             fill_with_rareness_features(features, words_counter, word)
+
             stream.write(tag + ' ' + get_features_str(features) + '\n')
 
     # write output
