@@ -2,7 +2,8 @@ import sys
 from StringIO import StringIO
 from time import time
 
-from DataHandler import DataHandler
+from obj.HMM_DataHandler import DataHandler
+from obj.ViterbiTagger import ViterbiTagger
 
 START = '_START_'
 
@@ -22,14 +23,14 @@ if __name__ == '__main__':
     e_filename = sys.argv[3]
     output_filename = sys.argv[4]
 
-    data_handler = DataHandler(q_filename, e_filename)
+    tagger = ViterbiTagger(DataHandler(q_filename, e_filename))
 
     lines = read_file(input_filename)
     stream = StringIO()
 
     for line in lines:
         line = line.split(' ')
-        tags = data_handler.get_tags_viterbi(line)
+        tags = tagger.get_opt_tags(line)
 
         word = line[0]
         tag = tags[0]
