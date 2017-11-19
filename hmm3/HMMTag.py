@@ -2,8 +2,8 @@ import sys
 from StringIO import StringIO
 from time import time
 
-from obj.GreedyTagger import GreedyTagger
-from obj.HMM_DataHandler import DataHandler
+from hmm1.HMM_DataHandler import DataHandler
+from hmm3.ViterbiTagger import ViterbiTagger
 
 START = '_START_'
 
@@ -23,26 +23,21 @@ if __name__ == '__main__':
     e_filename = sys.argv[3]
     output_filename = sys.argv[4]
 
-    tagger = GreedyTagger(DataHandler(q_filename, e_filename))
+    tagger = ViterbiTagger(DataHandler(q_filename, e_filename))
 
     lines = read_file(input_filename)
     stream = StringIO()
+
     for line in lines:
-        words = iter(line.split(' '))
-        tag2 = tag1 = START
+        line = line.split(' ')
+        tags = tagger.get_opt_tags(line)
 
-        w0 = next(words)
-        tag = tagger.get_opt_tag(w0, tag2, tag1)
-        stream.write(w0 + '/' + tag)
+        word = line[0]
+        tag = tags[0]
+        stream.write(word + '/' + tag)
 
-        for word in words:
-            tag = tagger.get_opt_tag(word, tag2, tag1)
+        for word, tag in zip(line[1:], tags[1:]):
             stream.write(' ' + word + '/' + tag)
-
-            tag2 = tag1
-            tag1 = tag
-
-        # end of line
         stream.write('\n')
 
     out_file = open(output_filename, 'w')
