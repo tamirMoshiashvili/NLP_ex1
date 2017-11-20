@@ -44,22 +44,22 @@ def fill_with_regular_features(features_dict, line, i):
     """
     if i > 0:
         prev_word, prev_tag = line[i - 1]
-        features_dict['prev_word'] = prev_word
-        features_dict['prev_tag'] = prev_tag
+        features_dict['pr_w'] = prev_word
+        features_dict['pr_t'] = prev_tag
     else:
-        features_dict['prev_tag'] = START
+        features_dict['pr_t'] = START
     if i > 1:
         prev_prev_word, prev_prev_tag = line[i - 2]
-        features_dict['prev_prev_word'] = prev_prev_word
-        features_dict['prev_2_tags'] = prev_prev_tag + '/' + line[i - 1][1]
+        features_dict['pr_pr_w'] = prev_prev_word
+        features_dict['pr_2_t'] = prev_prev_tag + '/' + line[i - 1][1]
     else:
-        features_dict['prev_2_tags'] = START + '/' + START
+        features_dict['pr_2_t'] = START + '/' + START
 
     n = len(line)
     if i < n - 1:
-        features_dict['next_word'] = line[i + 1][0]
+        features_dict['nx_w'] = line[i + 1][0]
     if i < n - 2:
-        features_dict['next_next_word'] = line[i + 2][0]
+        features_dict['nx_nx_w'] = line[i + 2][0]
 
 
 def is_rare(counter, w):
@@ -77,18 +77,18 @@ def fill_with_rareness_features(features_dict, counter, w):
     :param w: word.
     """
     if is_rare(counter, w):
-        features_dict['contains_hyphen'] = '-' in w
-        features_dict['contains_number'] = any(char.isdigit() for char in w)
-        features_dict['contains_uppercase'] = any(char == char.upper() for char in w)
+        features_dict['hyphen'] = '-' in w
+        features_dict['num'] = any(char.isdigit() for char in w)
+        features_dict['upper'] = any(char == char.upper() for char in w)
 
         # prefixes and suffixes
         n = len(w)
-        for j in range(n):
+        for j in range(4):
             if n > j:
-                features_dict['prefix_' + str(j + 1)] = w[:j + 1]
-                features_dict['suffix_' + str(j + 1)] = w[n - j - 1:]
+                features_dict['pre_' + str(j + 1)] = w[:j + 1]
+                features_dict['suf_' + str(j + 1)] = w[n - j - 1:]
     else:
-        features_dict['form'] = w
+        features_dict['w'] = w
 
 
 def get_features_str(features_dict):
@@ -104,7 +104,7 @@ def get_features_str(features_dict):
     key0, val0 = next(features_dict_iter_items)
     feat_str.write(key0 + '=' + str(val0))
 
-    for key, val in features_dict.iteritems():
+    for key, val in features_dict_iter_items:
         feat_str.write(' ' + key + '=' + str(val))
 
     return feat_str.getvalue()

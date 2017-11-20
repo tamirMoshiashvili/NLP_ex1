@@ -1,27 +1,44 @@
 import sys
 from StringIO import StringIO
+features_list = ['pr_w', 'pr_t', 'pr_pr_w', 'pr_2_t', 'nx_w', 'nx_nx_w', 'w', 'hyphen', 'num', 'upper',
+                'pre_1','pre_2','pre_3','pre_4', 'suf_1', 'suf_2', 'suf_3', 'suf_4']
 
-
-def index_in(value, some_list):
-    # (str,list)->int
+def add_to(value, some_list):
     if value not in some_list:
         some_list.append(value)
+
+
+def index_in_list(value, some_list):
     return some_list.index(value)
+
+def index_of_feature(value, feature_dict):
+    name, tag = value.split("=")
+    index_val = 0
+    for key in feature_dict.keys():
+        if key != name:
+            index_val += len(feature_dict[key])-1
+        else:
+            index_val += index_in_list(tag, feature_dict[key])
+            break
+    return index_val
 
 
 def map_feature_and_labels(feature_file):
-    label_list = []
-    feature_list = []
-    f = open(feature_file, 'r')
-    file_lines = f.read().splitlines()
-    f.close()
-    for line in file_lines:
-        parts = line.split()
-        index_in(parts[0], label_list)
-        for feature in parts[1:]:
-            index_in(feature, feature_list)
+    labels_list = []
+    feature_dict = {}
+    for feat in features_list:
+        feature_dict[feat] = []
 
-    return label_list, sorted(feature_list)
+    f = open(feature_file, 'r')
+    for line in f:
+        parts = line.split()
+        add_to(parts[0], labels_list)
+        for i_feature in parts[1:]:
+            name, tag = i_feature.split('=', 1)
+            add_to(tag, feature_dict[name])
+    f.close()
+    print ("a")
+    return labels_list, feature_dict
 
 from time import time
 def write_feature_map(feature_map_file, label_list, feature_list):
@@ -41,28 +58,26 @@ def write_feature_map(feature_map_file, label_list, feature_list):
 if __name__ == '__main__':
     feature_vecs_file = sys.argv[2]
     last_time = time()
-    label_list, feature_list = map_feature_and_labels(sys.argv[1])
+    label_list, features_dict = map_feature_and_labels(sys.argv[1])
     now = time()
-    print("create lists: "+ str(last_time - now))
+    print("create lists: " + str( now - last_time))
     last_time = now
 
-    write_feature_map(sys.argv[3], label_list, feature_list)
+    # write_feature_map(sys.argv[3], label_list, feature_list)
     now = time()
-    print("write lists to map file: " + str(last_time - now))
+    print("write lists to map file: " + str(now - last_time))
     last_time = now
 
     stream = StringIO()
-    f = open(sys.argv[1], 'r')
-    file_lines = f.read().splitlines()
-    f.close()
-
-    for line in file_lines:
+    feature_file = open(sys.argv[1], 'r')
+    for line in feature_file.readlines():
         parts = line.split()
-        stream.write(str(index_in(parts[0], label_list)) + " ")
+        stream.write(str(index_in_list(parts[0], label_list)) + " ")
         f = []
         for feature in parts[1:]:
-            f.append(index_in(feature, feature_list))
-        map(lambda x: stream.write(x + ":1 "), sorted(f))
+            print feature
+            f.append(index_of_feature(feature, features_dict))
+        map(lambda x: stream.write(str(x) + ":1 "), sorted(f))
         stream.write('\n')
 
     output_file = open(feature_vecs_file, "w")
@@ -70,7 +85,7 @@ if __name__ == '__main__':
     output_file.close()
 
     now = time()
-    print("write vectors file: " + str(last_time - now))
+    print("write vectors file: " + str(now - last_time))
     last_time = now
 
 
