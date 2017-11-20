@@ -18,6 +18,13 @@ def read_file(filename):
 
 
 def add_to_dict(d, key, val):
+    """
+    Add the given (key, val) if key is new to the dictionary.
+    :param d: dictionary.
+    :param key: string.
+    :param val: id value, val >= 0
+    :return: the next available id.
+    """
     if key not in d:
         d[key] = val
         val += 1
@@ -25,6 +32,10 @@ def add_to_dict(d, key, val):
 
 
 def get_feature_to_id_dict(file_lines):
+    """
+    :param file_lines: list of lines, each line is a list of strings.
+    :return: dictionary that maps feature-string to its id.
+    """
     feature_to_id_dict = dict()
     i = 0
 
@@ -34,6 +45,7 @@ def get_feature_to_id_dict(file_lines):
         if tag not in feature_to_id_dict:
             i = add_to_dict(feature_to_id_dict, tag, i)
 
+    # give id to other features
     for line in file_lines:
         for feature in line:
             i = add_to_dict(feature_to_id_dict, feature, i)
@@ -42,15 +54,26 @@ def get_feature_to_id_dict(file_lines):
 
 
 def write_vecs_file(vecs_filename, feature_to_id_dict, file_lines):
+    """
+    Write the file with the given features mapped to their ids.
+    """
     stream = StringIO()
 
     for line in file_lines:
         line_iter = iter(line)
+
+        # get the tag
         tag = next(line_iter)
         stream.write(str(feature_to_id_dict[tag]))
 
+        # get the other features and sort them
+        sorted_list = list()
         for feature in line_iter:
-            stream.write(' ' + str(feature_to_id_dict[feature]) + ':1')
+            sorted_list.append(feature_to_id_dict[feature])
+        sorted_list.sort()
+
+        for feature_id in sorted_list:
+            stream.write(' ' + str(feature_id) + ':1')
         stream.write('\n')
 
     vecs_file = open(vecs_filename, 'w')
