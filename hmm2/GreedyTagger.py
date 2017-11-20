@@ -16,7 +16,7 @@ class GreedyTagger:
 
     def get_opt_tag(self, word, tag2, tag1):
         opt_tag = None
-        p = 0
+        max = 0
 
         if is_number(word):
             return 'CD'
@@ -26,7 +26,7 @@ class GreedyTagger:
 
         for tag in self.dh.e[word]:
             eq = self.dh.get_score(word, tag2, tag1, tag)
-            if eq > p:
-                p = eq
+            if eq > max:
+                max = eq
                 opt_tag = tag
         return opt_tag

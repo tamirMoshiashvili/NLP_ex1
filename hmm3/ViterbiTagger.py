@@ -1,5 +1,5 @@
 START = '_START_'
-
+UNK = '_UNK_'
 
 def argmax(d):
     v = list(d.values())
@@ -30,9 +30,11 @@ class ViterbiTagger:
         prev_tag_set = [START]
         for i in range(0, n + 1):
             word = line[i]
-            curr_tag_set = self.dh.tag_set
+            #curr_tag_set = self.dh.tag_set
             if word in self.dh.e:
                 curr_tag_set = self.dh.e[word].keys()
+            else:
+                curr_tag_set = self.dh.e[UNK].keys()
 
             bp[i + 1] = {}
             v[i + 1] = {}

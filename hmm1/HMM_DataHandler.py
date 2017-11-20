@@ -1,3 +1,6 @@
+eps = 1e-7
+START = '_START_'
+
 def read_file(filename):
     f = open(filename, 'r')
     file_lines = f.read().splitlines()
@@ -39,7 +42,7 @@ def get_q_counter(filename):
 
 def smart_div(x, y):
     if y == 0:
-        return 1e-7
+        return eps
     return float(x) / y
 
 
@@ -48,10 +51,6 @@ def concat(words):
     for word in words[1:]:
         w1 += ' ' + word
     return w1
-
-
-eps = 1e-7
-START = '_START_'
 
 
 class DataHandler:

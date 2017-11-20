@@ -4,6 +4,7 @@ from time import time
 
 START = '_START_'
 UNK = '_UNK_'
+START_UNK = 0.9
 
 
 def write_to_file(filename, counter):
@@ -34,28 +35,31 @@ def read_file(filename):
 if __name__ == '__main__':
     t = time()
     lines = read_file(sys.argv[1])
-
+    wordset = set()
+    wordset.add(UNK)
     q = dict()
     e = dict()
-
+    lines_with_new_words = len(lines) * START_UNK
     for line in lines:
         pairs = line.split(' ')
         tag2 = tag1 = START
 
         add_to_counter(q, [tag2, tag1, tag2 + ' ' + tag1])
 
-        is_UNK_line = random.randint(1, 20) == 1
+        # is_UNK_line = random.randint(1, 20) == 1
         for pair in pairs:
             word, tag = pair.rsplit('/', 1)
-            if is_UNK_line:
+            if lines_with_new_words <= 0 and word not in wordset:
                 word = UNK
+            if word not in wordset:
+                wordset.add(word)
 
             add_to_counter(e, [word + ' ' + tag])
             add_to_counter(q, [tag, tag1 + ' ' + tag, tag2 + ' ' + tag1 + ' ' + tag])
 
             tag2 = tag1
             tag1 = tag
-
+        lines_with_new_words -= 1
     write_to_file(sys.argv[2], q)
     write_to_file(sys.argv[3], e)
 
