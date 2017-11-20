@@ -1,5 +1,6 @@
 import sys
 from StringIO import StringIO
+from time import time
 
 START = '_START_'
 
@@ -17,7 +18,7 @@ def read_file(filename):
         file_lines[i] = line
         for j, pair in enumerate(line):
             word, tag = pair.rsplit('/', 1)
-            file_lines[i][j] = (word, tag)  # TODO: need to check the alert - says that it is a string
+            file_lines[i][j] = (word, tag)
     return file_lines
 
 
@@ -111,6 +112,8 @@ def get_features_str(features_dict):
 
 
 if __name__ == '__main__':
+    t = time()
+
     input_filename = sys.argv[1]
     output_filename = sys.argv[2]
 
@@ -130,3 +133,5 @@ if __name__ == '__main__':
     output_file = open(output_filename, 'w')
     output_file.write(stream.getvalue())
     output_file.close()
+
+    print time() - t
