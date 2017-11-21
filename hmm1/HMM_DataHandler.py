@@ -1,5 +1,8 @@
+import numpy as np
+
 eps = 1e-7
 START = '_START_'
+
 
 def read_file(filename):
     f = open(filename, 'r')
@@ -84,4 +87,4 @@ class DataHandler:
 
     def get_score(self, word, tag2, tag1, tag):
         """ :return: score of the given parameters, which is e * q """
-        return self.get_e_of(word, tag) * self.get_q_of_tags(tag2, tag1, tag)
+        return np.log(self.get_e_of(word, tag)) + np.log(self.get_q_of_tags(tag2, tag1, tag))

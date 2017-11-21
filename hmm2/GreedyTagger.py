@@ -1,3 +1,5 @@
+import numpy as np
+
 UNK = '_UNK_'
 
 
@@ -16,7 +18,7 @@ class GreedyTagger:
 
     def get_opt_tag(self, word, tag2, tag1):
         opt_tag = None
-        max = 0
+        max = -np.inf
 
         if is_number(word):
             return 'CD'

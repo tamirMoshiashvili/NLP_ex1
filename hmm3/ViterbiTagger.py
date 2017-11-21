@@ -30,7 +30,6 @@ class ViterbiTagger:
         prev_tag_set = [START]
         for i in range(0, n + 1):
             word = line[i]
-            #curr_tag_set = self.dh.tag_set
             if word in self.dh.e:
                 curr_tag_set = self.dh.e[word].keys()
             else:
@@ -44,7 +43,7 @@ class ViterbiTagger:
                 for r in curr_tag_set:
                     l = {}
                     for prev_prev_tag in prev_prev_tag_set:
-                        l[prev_prev_tag] = v[i][prev_prev_tag][prev_tag] *\
+                        l[prev_prev_tag] = v[i][prev_prev_tag][prev_tag] +\
                                            self.dh.get_score(word, prev_prev_tag, prev_tag, r)
 
                     v[i + 1][prev_tag][r] = max(list(l.values()))
