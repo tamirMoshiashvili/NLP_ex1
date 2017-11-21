@@ -39,7 +39,7 @@ class LiblinearLogregPredictor(object):
 if __name__ == '__main__':
     # usage example
     llp = LiblinearLogregPredictor("model_second")
-    p =  llp.predict([68, 91, 96, 101, 104, 111, 134, 173, 234, 281, 282, 285, 286, 287, 288, 289, 290, 291])
+    p =  llp.predict(['101', '104', '96', '2258', '315', '2257', '3633', '26284', '6374', '113102', '42141', '47', '6064', '63'])
     max_value = 0
     good = None
     max_val = max(p.values())
