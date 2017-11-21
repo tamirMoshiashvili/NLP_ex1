@@ -24,6 +24,10 @@ class FeatureIds:
             key, value = line.rsplit(" ", 1)
             self.feature_map[key] = value
 
+    def _add_to(self, feature_list, feature):
+        if feature in self.feature_map:
+            feature_list.append(self.feature_map[feature])
+
     def get_feature_vector(self, word,pre_word, pre_pre_word, pre_label, pre_pre_label, next_word, next_next_word):
         feature_list = []
         if "w="+word in self.feature_map:
@@ -45,19 +49,16 @@ class FeatureIds:
                         feature_list.append(self.feature_map['suf_' + str(j + 1) + "=" +  word[n - j - 1:]])
                     except:
                         pass
-        if 'pr_w=' + pre_word in self.feature_map:
-            feature_list.append(self.feature_map['pr_w=' + pre_word])
-        if 'pr_pr_w=' + pre_pre_word in self.feature_map:
-            feature_list.append(self.feature_map['pr_pr_w=' + pre_pre_word])
-        if 'pr_t=' + pre_label in self.feature_map:
-            feature_list.append(self.feature_map['pr_t=' + pre_label])
-        if 'pr_pr_t=' + pre_pre_label in self.feature_map:
-            feature_list.append(self.feature_map['pr_pr_t=' + pre_pre_label])
+        self._add_to(feature_list,'pr_w=' + pre_word)
+        self._add_to(feature_list,'pr_pr_w=' + pre_pre_word)
+        self._add_to(feature_list,'pr_t=' + pre_label)
+        self._add_to(feature_list,'pr_pr_t=' + pre_pre_label)
 
-        if next_word and 'nx_w='+next_word in self.feature_map:
-            feature_list.append(self.feature_map['nx_w='+next_word])
-        if next_next_word and 'nx_nx_w=' + next_next_word in self.feature_map:
-            feature_list.append(self.feature_map['nx_nx_w=' + next_next_word])
+        if next_word:
+            self._add_to(feature_list,'nx_w='+next_word )
+        if next_next_word:
+            self._add_to('nx_nx_w=' + next_next_word)
+
         vector_str = ''
         map(lambda x: vector_str + x + ":1 " ,sorted(feature_list))
         vector_str += "\n"

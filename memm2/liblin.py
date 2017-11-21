@@ -42,6 +42,9 @@ if __name__ == '__main__':
     p =  llp.predict([68, 91, 96, 101, 104, 111, 134, 173, 234, 281, 282, 285, 286, 287, 288, 289, 290, 291])
     max_value = 0
     good = None
+    max_val = max(p.values())
+    print p.keys()[p.values().index(max_val)]
+
     for tag in p.keys():
         if p[tag] >= max_value:
             good = tag
