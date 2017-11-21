@@ -34,7 +34,7 @@ class GreedyMaxEntTag:
             words.append("")
 
             for i in range(0,len(words)-3):
-                tag = self.get_max_predict(words[i], pre_word, pre_pre_word, pre_tag, pre_pre_tag, words[i+1], words[i+2])
+                tag = self.feature_ids.labels[str(self.get_max_predict(words[i], pre_word, pre_pre_word, pre_tag, pre_pre_tag, words[i+1], words[i+2]))]
                 pre_pre_tag = pre_tag
                 pre_tag = tag
                 pre_pre_word = pre_word

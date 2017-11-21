@@ -16,13 +16,18 @@ def read_file(filename):
 class FeatureIds:
     def __init__(self, feature_map_file):
         self.feature_map = {}
+        self.labels = {}
         self._map_file_to_dict(feature_map_file)
 
     def _map_file_to_dict(self, feature_map_file):
         lines = read_file(feature_map_file)
         for line in lines:
             key, value = line
-            self.feature_map[key] = value
+            if not key.startswith("t=",0,2):
+                self.feature_map[key] = value
+            else:
+                self.labels[value] = key
+        print "debug: labels is: " + str(self.labels)
 
     def _add_to(self, feature_list, feature):
         if feature.split("=", 1)[1] != "" and feature in self.feature_map:
