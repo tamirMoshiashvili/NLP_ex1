@@ -32,6 +32,7 @@ if __name__ == '__main__':
             print("fall on words: |" + test + "|  :  |" + pred + "|")
             break
 
+
         if t1 == t2:
             good += 1
         else:
