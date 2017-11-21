@@ -16,6 +16,7 @@ class GreedyMaxEntTag:
                                                                    pre_pre_label, next_word, next_next_word)
         result = self.predictor.predict(sorted(vector))
         max_val = max(result.values())
+        index_of_max = result.values().index(max_val)
         return result.keys()[result.values().index(max_val)]
 
 
@@ -32,15 +33,19 @@ class GreedyMaxEntTag:
             words = line.split()
             words.append("")
             words.append("")
-
-            for i in range(0,len(words)-3):
-                tag = self.feature_ids.labels[str(self.get_max_predict(words[i], pre_word, pre_pre_word, pre_tag, pre_pre_tag, words[i+1], words[i+2]))]
+            line = []
+            for i in range(0,len(words)-2):
+                tag_num = self.get_max_predict(words[i], pre_word, pre_pre_word, pre_tag, pre_pre_tag, words[i+1], words[i+2])
+                tag = self.feature_ids.labels[tag_num]
                 pre_pre_tag = pre_tag
                 pre_tag = tag
                 pre_pre_word = pre_word
                 pre_word = words[i]
-                stream.write(words[i] + "/" + tag + " ")
-            stream.write("\n")
+                line.append(words[i] + "/" + tag)
+            for i in range(0,len(line)-1):
+                stream.write(line[i] + " ")
+            stream.write(line[-1]+"\n")
+
         ot = open(output_file_name,"w")
         ot.write(stream.getvalue())
         ot.close()

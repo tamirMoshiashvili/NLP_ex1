@@ -43,8 +43,8 @@ def get_feature_to_id_dict(file_lines):
     for line in file_lines:
         tag = line[0]
         if tag not in feature_to_id_dict:
-            i = add_to_dict(feature_to_id_dict, tag, i)
-
+            i = add_to_dict(feature_to_id_dict, "t=" + tag, i)
+    i = 1
     # give id to other features
     for line in file_lines:
         for feature in line:
@@ -64,7 +64,7 @@ def write_vecs_file(vecs_filename, feature_to_id_dict, file_lines):
 
         # get the tag
         tag = next(line_iter)
-        stream.write(str(feature_to_id_dict[tag]))
+        stream.write(str(feature_to_id_dict["t=" + tag]))
 
         # get the other features and sort them
         sorted_list = list()

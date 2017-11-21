@@ -26,7 +26,7 @@ class FeatureIds:
             if not key.startswith("t=",0,2):
                 self.feature_map[key] = value
             else:
-                self.labels[value] = key
+                self.labels[value] = key.split("=",1)[1]
         print "debug: labels is: " + str(self.labels)
 
     def _add_to(self, feature_list, feature):

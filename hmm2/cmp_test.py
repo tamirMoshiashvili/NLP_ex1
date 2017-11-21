@@ -24,8 +24,13 @@ if __name__ == '__main__':
 
     # compare
     for (test, pred) in zip(test_words, pred_words):
-        w1, t1 = test.rsplit('/', 1)
-        w2, t2 = pred.rsplit('/', 1)
+        try:
+            w1, t1 = test.rsplit('/', 1)
+            w2, t2 = pred.rsplit('/', 1)
+        except Exception as e:
+            print e.message
+            print("fall on words: |" + test + "|  :  |" + pred + "|")
+            break
 
         if t1 == t2:
             good += 1

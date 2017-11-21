@@ -43,7 +43,7 @@ def fill_with_regular_features(features_dict, line, i):
     :param line: list of (word, tag) tuples.
     :param i: index of the current tuple in line.
     """
-    features_dict['t'] = line[i][1]
+    # features_dict['t'] = line[i][1]
 
     if i > 0:
         prev_word, prev_tag = line[i - 1]
