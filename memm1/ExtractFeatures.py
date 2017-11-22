@@ -2,8 +2,9 @@ import sys
 from StringIO import StringIO
 from time import time
 
-START = '_START_'
+EXTRA_FILE_NAME = 'extra_file.txt'
 
+START = '_START_'
 
 def read_file(filename):
     """
@@ -112,6 +113,26 @@ def get_features_str(features_dict):
 
     return feat_str.getvalue()
 
+def write_extern_file(lines):
+    words = dict()
+    for line in lines:
+        for word, tag in line:
+            if word not in words:
+                words[word] = set()
+            words[word].add(tag)
+    stream = StringIO()
+
+    for word in words.keys():
+        stream.write(word + " ")
+        for tag in words[word]:
+            stream.write(tag + " ")
+        stream.write("\n")
+
+    extra = open(EXTRA_FILE_NAME, "w")
+    extra.write(stream.getvalue())
+    extra.close()
+
+
 
 if __name__ == '__main__':
     t = time()
@@ -121,8 +142,8 @@ if __name__ == '__main__':
 
     lines = read_file(input_filename)
     words_counter = get_words_counter(lines)
+    write_extern_file(lines)
     stream = StringIO()
-
     for line in lines:
         features = {}
         for i, (word, tag) in enumerate(line):

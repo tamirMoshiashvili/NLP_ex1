@@ -1,102 +1,108 @@
 import sys
 from StringIO import StringIO
-from multiprocessing import Process
-features_list = ['pr_w', 'pr_t', 'pr_pr_w', 'pr_2_t', 'nx_w', 'nx_nx_w', 'w', 'hyphen', 'num', 'upper',
-                'pre_1','pre_2','pre_3','pre_4', 'suf_1', 'suf_2', 'suf_3', 'suf_4']
-
-def add_to(value, some_list):
-    if value not in some_list:
-        some_list.append(value)
-
-
-def index_in_list(value, some_list):
-    return some_list.index(value)
-
-def index_of_feature(value, feature_dict):
-    name, tag = value.split("=",1)
-    index_val = 0
-    for key in feature_dict.keys():
-        if key != name:
-            index_val += len(feature_dict[key])-1
-        else:
-            index_val += index_in_list(tag, feature_dict[key])
-            break
-    return index_val
-
-
-def map_feature_and_labels(feature_file):
-    labels_list = set()
-    feature_dict = {}
-    for feat in features_list:
-        feature_dict[feat] = []
-
-    f = open(feature_file, 'r')
-    for line in f:
-        parts = line.split()
-        labels_list.add(parts[0])
-        for i_feature in parts[1:]:
-            name, tag = i_feature.split('=', 1)
-            add_to(tag, feature_dict[name])
-    f.close()
-    print ("a")
-    return list(labels_list), feature_dict
-
 from time import time
-def write_feature_map(feature_map_file, label_list, feature_list):
 
+
+def read_file(filename):
+    """
+    :param filename: features filename.
+    :return: list of lines, each line is a list of strings.
+    """
+    f = open(filename, 'r')
+    file_lines = f.read().splitlines()
+    f.close()
+
+    for i, line in enumerate(file_lines):
+        file_lines[i] = line.split(' ')
+    return file_lines
+
+
+def add_to_dict(d, key, val):
+    """
+    Add the given (key, val) if key is new to the dictionary.
+    :param d: dictionary.
+    :param key: string.
+    :param val: id value, val >= 0
+    :return: the next available id.
+    """
+    if key not in d:
+        d[key] = val
+        val += 1
+    return val
+
+
+def get_feature_to_id_dict(file_lines):
+    """
+    :param file_lines: list of lines, each line is a list of strings.
+    :return: dictionary that maps feature-string to its id.
+    """
+    feature_to_id_dict = dict()
+    i = 0
+
+    # give tags the first id from zero
+    for line in file_lines:
+        tag = line[0]
+        if tag not in feature_to_id_dict:
+            i = add_to_dict(feature_to_id_dict, "t=" + tag, i)
+    i = 1
+    # give id to other features
+    for line in file_lines:
+        for feature in line:
+            i = add_to_dict(feature_to_id_dict, feature, i)
+
+    return feature_to_id_dict
+
+
+def write_vecs_file(vecs_filename, feature_to_id_dict, file_lines):
+    """
+    Write the file with the given features mapped to their ids.
+    """
     stream = StringIO()
-    for i in range(0, len(label_list) - 1):
-        stream.write(label_list[i] + " " + str(i) + "\t")
-    stream.write('\n')
 
-    for name in feature_list:
-        for value in feature_list[name]:
-            feature = name + "=" + value
-            stream.write(feature + " " + str(index_of_feature(feature, feature_list)) + "\n")
+    for line in file_lines:
+        line_iter = iter(line)
 
-    output_file = open(feature_map_file, "w")
-    output_file.write(stream.getvalue())
-    output_file.close()
+        # get the tag
+        tag = next(line_iter)
+        stream.write(str(feature_to_id_dict["t=" + tag]))
+
+        # get the other features and sort them
+        sorted_list = list()
+        for feature in line_iter:
+            sorted_list.append(feature_to_id_dict[feature])
+        sorted_list.sort()
+
+        for feature_id in sorted_list:
+            stream.write(' ' + str(feature_id) + ':1')
+        stream.write('\n')
+
+    vecs_file = open(vecs_filename, 'w')
+    vecs_file.write(stream.getvalue())
+    vecs_file.close()
+
+
+def write_map_file(filename, feature_to_id_dict):
+    stream = StringIO()
+
+    for feature in feature_to_id_dict:
+        stream.write(feature + ' ' + str(feature_to_id_dict[feature]) + '\n')
+
+    f = open(filename, 'w')
+    f.write(stream.getvalue())
+    f.close()
 
 
 if __name__ == '__main__':
-    feature_vecs_file = sys.argv[2]
-    last_time = time()
-    label_list, features_dict = map_feature_and_labels(sys.argv[1])
-    now = time()
-    print("create lists: " + str( now - last_time))
-    last_time = now
+    t = time()
 
-    p = Process(target=write_feature_map,args = (sys.argv[3], label_list, features_dict,))
-    p.start()
+    feature_filename = sys.argv[1]
+    feature_vecs_filename = sys.argv[2]
+    feature_map_filename = sys.argv[3]
 
+    lines = read_file(feature_filename)
+    feature_to_id = get_feature_to_id_dict(lines)
 
-    stream = StringIO()
-    feature_file = open(sys.argv[1], 'r')
-    for line in feature_file.readlines():
-        parts = line.split()
-        stream.write(str(index_in_list(parts[0], label_list)) + " ")
-        f = []
-        for feature in parts[1:]:
-            try:
-                f.append(index_of_feature(feature, features_dict))
-            except:
-                print feature
+    write_vecs_file(feature_vecs_filename, feature_to_id, lines)
+    write_map_file(feature_map_filename, feature_to_id)
 
-        map(lambda x: stream.write(str(x) + ":1 "), sorted(f))
-        stream.write('\n')
-
-    output_file = open(feature_vecs_file, "w")
-    output_file.write(stream.getvalue())
-    output_file.close()
-    p.join()
-    now = time()
-    print("write vectors file + map file: " + str(now - last_time))
-    last_time = now
-
-
-
-
-
-
-
+    print time() - t
