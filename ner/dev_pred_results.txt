@@ -1,2 +1,3 @@
 # GreedyTag *with*    the CD tagging: 87.29%
 # GreedyTag *without* the CD tagging: 95.03%
+# HMMTag: 95/07%
