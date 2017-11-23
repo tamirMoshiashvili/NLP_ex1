@@ -6,6 +6,7 @@ EXTRA_FILE_NAME = 'extra_file.txt'
 
 START = '_START_'
 
+
 def read_file(filename):
     """
     :return list of lines, each line is a list of (word, tag) tuples.
@@ -113,6 +114,7 @@ def get_features_str(features_dict):
 
     return feat_str.getvalue()
 
+
 def write_extern_file(lines):
     words = dict()
     for line in lines:
@@ -131,7 +133,6 @@ def write_extern_file(lines):
     extra = open(EXTRA_FILE_NAME, "w")
     extra.write(stream.getvalue())
     extra.close()
-
 
 
 if __name__ == '__main__':

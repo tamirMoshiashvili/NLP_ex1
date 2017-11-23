@@ -27,7 +27,6 @@ if __name__ == '__main__':
         w1, t1 = test.rsplit('/', 1)
         w2, t2 = pred.rsplit('/', 1)
 
-
         if t1 == t2:
             good += 1
         else:

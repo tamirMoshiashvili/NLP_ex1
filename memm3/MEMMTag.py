@@ -25,11 +25,11 @@ class MEMMTagger:
         f = open(extra_file, 'r')
         file_lines = f.read().splitlines()
         f.close()
+
         words = dict()
         for line in file_lines:
             line = line.split()
-            words [line[0]] = line[1:]
-
+            words[line[0]] = line[1:]
 
         return words
 
@@ -55,7 +55,6 @@ class MEMMTagger:
         out_file = open(output_file, 'w')
         out_file.write(stream.getvalue())
         out_file.close()
-
 
     def predict_line(self, line):
         all_labels = self.vector_creator.labels.values()
@@ -91,12 +90,13 @@ class MEMMTagger:
                     r_num = self.labels_by_name[r]
                     for prev_prev_tag in prev_prev_tag_set:
                         vector = self.vector_creator.get_feature_vector(word, pre_word, pre_pre_word, prev_tag,
-                                                                        prev_prev_tag, line[i+1],line[i+2])
+                                                                        prev_prev_tag, line[i + 1], line[i + 2])
                         result = self.predictor.predict(vector)
                         l[prev_prev_tag] = v[i][prev_prev_tag][prev_tag] * result[r_num]
 
                     v[i + 1][prev_tag][r] = max(list(l.values()))
                     bp[i + 1][prev_tag][r] = argmax(l)
+
             pre_pre_word = pre_word
             pre_word = word
             prev_prev_tag_set = prev_tag_set
@@ -126,11 +126,11 @@ class MEMMTagger:
         return y
 
 
-
 from time import time
+
 # input_file_name, modelname, feature_map_file, out_file_name, extra_file (from mmem1)
 if __name__ == '__main__':
-    print "initilizing..."
+    print "initializing..."
     first = time()
 
     tagger = MEMMTagger(sys.argv[2], sys.argv[3], sys.argv[5])

@@ -2,25 +2,24 @@ from FeatureIds import FeatureIds as FeatureIds
 from liblin import LiblinearLogregPredictor as predictor
 from StringIO import StringIO
 import sys
+
 START = '_START_'
 
 
-
 class GreedyMaxEntTag:
-    def __init__(self, model_file_name,feature_map_file ):
+    def __init__(self, model_file_name, feature_map_file):
         self.feature_ids = FeatureIds(feature_map_file)
         self.predictor = predictor(model_file_name)
 
-    def get_max_predict(self,word,pre_word, pre_pre_word, pre_label, pre_pre_label, next_word, next_next_word):
-        vector = self.feature_ids.get_feature_vector(word,pre_word, pre_pre_word, pre_label,
-                                                                   pre_pre_label, next_word, next_next_word)
+    def get_max_predict(self, word, pre_word, pre_pre_word, pre_label, pre_pre_label, next_word, next_next_word):
+        vector = self.feature_ids.get_feature_vector(word, pre_word, pre_pre_word, pre_label,
+                                                     pre_pre_label, next_word, next_next_word)
         result = self.predictor.predict(sorted(vector))
         max_val = max(result.values())
 
         return result.keys()[result.values().index(max_val)]
 
-
-    def tag_file(self,input_file_name, output_file_name):
+    def tag_file(self, input_file_name, output_file_name):
         f = open(input_file_name, 'r')
         file_lines = f.read().splitlines()
         f.close()
@@ -34,25 +33,28 @@ class GreedyMaxEntTag:
             words.append("")
             words.append("")
             line = []
-            for i in range(0, len(words)-2):
-                tag_num = self.get_max_predict(words[i], pre_word, pre_pre_word, pre_tag, pre_pre_tag, words[i+1], words[i+2])
+            for i in range(0, len(words) - 2):
+                tag_num = self.get_max_predict(words[i], pre_word, pre_pre_word, pre_tag, pre_pre_tag,
+                                               words[i + 1], words[i + 2])
                 tag = self.feature_ids.labels[tag_num]
+
                 pre_pre_tag = pre_tag
                 pre_tag = tag
                 pre_pre_word = pre_word
                 pre_word = words[i]
-                line.append(words[i] + "/" + tag)
-            for i in range(0,len(line)-1):
-                stream.write(line[i] + " ")
-            stream.write(line[-1]+"\n")
 
-        ot = open(output_file_name,"w")
+                line.append(words[i] + "/" + tag)
+
+            for i in range(0, len(line) - 1):
+                stream.write(line[i] + " ")
+            stream.write(line[-1] + "\n")
+
+        ot = open(output_file_name, "w")
         ot.write(stream.getvalue())
         ot.close()
 
 
 # input_file_name , modelname, feature_map_file, out_file_name
 if __name__ == '__main__':
-    tagger = GreedyMaxEntTag(sys.argv[2],sys.argv[3])
+    tagger = GreedyMaxEntTag(sys.argv[2], sys.argv[3])
     tagger.tag_file(sys.argv[1], sys.argv[4])
-
