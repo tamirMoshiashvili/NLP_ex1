@@ -6,3 +6,23 @@
 # HMMTag: 95.07%
 # GreedyMaxEntTag: 96.36%
 # MEMMTag        : 97.11%
+
+!!! ner_eval.py results:
+
+# GreedyMaxEntTag:
+        Accuracy: 0.961049284579
+
+        All-types 	Prec:0.819430140748 Rec:0.803433187479
+               LOC 	Prec:0.815979381443 Rec:0.861731083288
+              MISC 	Prec:0.864102564103 Rec:0.731019522777
+               PER 	Prec:0.84247691472 Rec:0.842019543974
+               ORG 	Prec:0.763636363636 Rec:0.720357941834
+
+# MEMMTag:
+        Accuracy: 0.970627011517
+
+        All-types 	Prec:0.845709570957 Rec:0.862504207338
+               LOC 	Prec:0.858974358974 Rec:0.91181273816
+              MISC 	Prec:0.853286384977 Rec:0.788503253796
+               PER 	Prec:0.892971246006 Rec:0.910423452769
+               ORG 	Prec:0.757971014493 Rec:0.780014914243
