@@ -20,8 +20,8 @@ class GreedyTagger:
         opt_tag = None
         max = -np.inf
 
-        if is_number(word):
-            return 'CD'
+        # if is_number(word):
+        #     return 'CD'
 
         if word not in self.dh.e:
             word = UNK
