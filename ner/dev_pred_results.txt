@@ -9,6 +9,24 @@
 
 !!! ner_eval.py results:
 
+# GreedyTag:
+        Accuracy: 0.943464267711
+
+        All-types 	Prec:0.789136175028 Rec:0.704140020195
+               LOC 	Prec:0.853372434018 Rec:0.792052259118
+              MISC 	Prec:0.769230769231 Rec:0.715835140998
+               PER 	Prec:0.871468926554 Rec:0.669923995657
+               ORG 	Prec:0.631141345427 Rec:0.622669649515
+
+# HMMTag:
+        Accuracy: 0.947070456396
+
+        All-types 	Prec:0.846630518978 Rec:0.735779198923
+               LOC 	Prec:0.911801242236 Rec:0.799129014698
+              MISC 	Prec:0.827830188679 Rec:0.761388286334
+               PER 	Prec:0.896011396011 Rec:0.682953311618
+               ORG 	Prec:0.725038402458 Rec:0.703952274422
+
 # GreedyMaxEntTag:
         Accuracy: 0.961049284579
 
