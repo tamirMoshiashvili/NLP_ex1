@@ -21,8 +21,8 @@
    4. brief description about the ways we will use to improve the MEMM-taggers on the NER data
 6.DONE
 7. DONE (I have it and put it in the zip when we will submit, no need to share it on git)
-8. in the memm1 part:
+8. DONE:
    1. DONE (I have the 'feature_map'-file in my directory, when needed I will put it in the zip file)
    2. DONE (the link is in the README file in memm1-directory)
-   3. create features_file_partial
-   4. create feature_vecs_partial
+   3. DONE
+   4. DONE
