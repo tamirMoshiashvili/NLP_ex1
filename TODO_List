@@ -1,5 +1,5 @@
 1. create zip for submit of all files
-2. separate to directories hmm1, hmm2, memm1, memm2, ner
+2. DONE
 3. create and write the 'writeup.pdf' file
     1. Describe how you handled unknown words in hmm1.
     2. Describe your pruning strategy in the viterbi hmm.
@@ -12,12 +12,13 @@
     7. What will you change in the memm tagger to improve accuracy on the named entities data,
        on top of what you already did?
     8. Why are span scores lower than accuracy scores?
-4. create README file and put it in memm1
-5. create 'ner.txt' file:
+4. DONE
+5. create 'ner.txt' file: (created 'dev_pred_results.txt' which contain the accuracies,
+                           I am waiting for Yoav's answer in the piazza)
    1. per-toke accuracy of all taggers on the dev-set
    2. per-span precision, recall and F-measure on the dev-set
    3. brief discussion on the Why's:
       1. The NER results are lower than the POS results (how much lower?), look at the data and think why
       2. The span-based F scores are lower than the accuracy scores. Why?
    4. brief description about the ways we will use to improve the MEMM-taggers on the NER data
-6. create ner.hmm.pred and ner.memm.pred
+6.DONE
