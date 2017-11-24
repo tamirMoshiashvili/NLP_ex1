@@ -1,0 +1,15 @@
+1. We took the last 10% lines from the corpus to use for the unknown words.
+   Unknown word will be marked in the code as the variable UNK and equals to '_UNK_'.
+   When we reach the last 10% of the lines in the corpus, and the given word was not seen before,
+    the word is set to UNK and enter the needed data with UNK (the data for e.mle and q.mle) .
+
+2. In Viterbi-HMM, the pruning strategy was to use for each word only the tags that seen before for that specific word.
+   If the word is unknown, so the tag-set will be only the tags that was seen for UNK.
+   So in the algorithm, we won't try to evaluate every tag in the tag-set, but only the tags that was seen before.
+
+3. NOTE - The following results are only for the POS data,
+          the results for NER data are in the 'ner'-directory.
+   GreedyTag:       93.04%
+   HMMTag:          94.88%
+   GreedyMaxEntTag: 95.6%
+   MEMMTag:         96.4%

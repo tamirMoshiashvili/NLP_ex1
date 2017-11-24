@@ -46,7 +46,6 @@ if __name__ == '__main__':
 
         add_to_counter(q, [tag2, tag1, tag2 + ' ' + tag1])
 
-        # is_UNK_line = random.randint(1, 20) == 1
         for pair in pairs:
             word, tag = pair.rsplit('/', 1)
             if lines_with_new_words <= 0 and word not in wordset:

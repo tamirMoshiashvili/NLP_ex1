@@ -1,10 +1,9 @@
 1. create zip for submit of all files
 2. DONE
 3. create and write the 'writeup.pdf' file
-    1. Describe how you handled unknown words in hmm1.
-    2. Describe your pruning strategy in the viterbi hmm.
-    3. Report your test scores when running the each tagger (hmm-greedy, hmm-viterbi,
-       maxent-greedy, memm-viterbi) on each dataset.
+    1. DONE
+    2. DONE
+    3. DONE
        For the NER dataset, report token accuracy accuracy, as well as span precision, recall and F1.
     4. Is there a difference in behavior between the hmm and maxent taggers? discuss.
     5. Is there a difference in behavior between the datasets? discuss.
@@ -22,3 +21,9 @@
       2. The span-based F scores are lower than the accuracy scores. Why?
    4. brief description about the ways we will use to improve the MEMM-taggers on the NER data
 6.DONE
+7. create directory which will contain info about us (names and IDs)
+8. in the memm1 part:
+   1. feature_map
+   2. upload the model_file to the drive and provide a link to it so the tester can download the model
+   3. create features_file_partial
+   4. create feature_vecs_partial
