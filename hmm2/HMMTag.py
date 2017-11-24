@@ -3,7 +3,7 @@ from StringIO import StringIO
 from time import time
 
 from hmm1.HMM_DataHandler import DataHandler
-from hmm3.ViterbiTagger import ViterbiTagger
+from hmm2.ViterbiTagger import ViterbiTagger
 
 START = '_START_'
 

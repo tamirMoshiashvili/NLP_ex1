@@ -135,6 +135,7 @@ def write_extern_file(lines):
     extra.close()
 
 
+# args: train_file features_file
 if __name__ == '__main__':
     t = time()
 

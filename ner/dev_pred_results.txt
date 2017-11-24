@@ -1,6 +1,6 @@
 !!! NOTE - the dev-set contains the train-set
 
-# PER-TOKEN #
+# PER-TOKEN according to cmp_test.py #
 # GreedyTag *with*    the CD tagging: 87.29%
 # GreedyTag *without* the CD tagging: 95.03%
 # HMMTag: 95.07%

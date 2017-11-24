@@ -92,6 +92,7 @@ def write_map_file(filename, feature_to_id_dict):
     f.close()
 
 
+# args: features_file feature_vecs_file feature_map_file
 if __name__ == '__main__':
     t = time()
 

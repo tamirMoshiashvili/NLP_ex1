@@ -1,0 +1,25 @@
+Instructions to run memm1:
+
+1. ExtractFeatures.py:
+   arguments: corpus_file features_file
+
+   corpus_file - train-set
+   features_file - name of the file that will be created after running ExtractFeatures.py
+   extra_file.txt - name of the file that will be created after running ExtractFeatures.py,
+                    its name is determined on top of ExtractFeatures.py
+
+2. ConvertFeatures.py:
+   Needed the 'features_file' that was created by running ExtractFeatures.py .
+
+   arguments: features_file feature_vecs_file feature_map_file
+
+   feature_vecs_file - name of file created after running ConvertFeatures.py
+   feature_map_file - name of file created after running ConvertFeatures.py
+
+3. TrainSolver.sh:
+   Needed the 'feature_vecs_file' created by running ConvertFeatures.py .
+   The memm1-directory contains the liblinear-1.94.jar.
+
+   Open the terminal in memm1-directory, enter the following:
+   bash TrainSolver.sh feature_vecs_file model_file
+   model_file - name of the model file that will be created after running TrainSolver.sh
