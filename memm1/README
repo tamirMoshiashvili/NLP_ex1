@@ -23,3 +23,6 @@ Instructions to run memm1:
    Open the terminal in memm1-directory, enter the following:
    bash TrainSolver.sh feature_vecs_file model_file
    model_file - name of the model file that will be created after running TrainSolver.sh
+
+4. A link to the model_file created by us:
+   https://drive.google.com/open?id=0B70OJOaAKNQIRWtsWkVVMjNySkUzRGtfZ2x6cV9YSUNyZ0JR

@@ -4,9 +4,8 @@
     1. DONE
     2. DONE
     3. DONE
-       For the NER dataset, report token accuracy accuracy, as well as span precision, recall and F1.
-    4. Is there a difference in behavior between the hmm and maxent taggers? discuss.
-    5. Is there a difference in behavior between the datasets? discuss.
+    4. DONE
+    5. DONE
     6. What will you change in the hmm tagger to improve accuracy on the named entities data?
     7. What will you change in the memm tagger to improve accuracy on the named entities data,
        on top of what you already did?
@@ -21,9 +20,9 @@
       2. The span-based F scores are lower than the accuracy scores. Why?
    4. brief description about the ways we will use to improve the MEMM-taggers on the NER data
 6.DONE
-7. create directory which will contain info about us (names and IDs)
+7. DONE (I have it and put it in the zip when we will submit, no need to share it on git)
 8. in the memm1 part:
-   1. feature_map
-   2. upload the model_file to the drive and provide a link to it so the tester can download the model
+   1. DONE (I have the 'feature_map'-file in my directory, when needed I will put it in the zip file)
+   2. DONE (the link is in the README file in memm1-directory)
    3. create features_file_partial
    4. create feature_vecs_partial

@@ -13,3 +13,8 @@
    HMMTag:          94.88%
    GreedyMaxEntTag: 95.6%
    MEMMTag:         96.4%
+
+4. The HMM-taggers are significantly faster than the MEMM-taggers,
+   but the MEMM-taggers provide better accuracies on the data-sets than the HMM-taggers.
+
+5. Tagging the NER data had better precision than tagging the POS data (one percent difference) .
