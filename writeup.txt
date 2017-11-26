@@ -18,3 +18,16 @@
    but the MEMM-taggers provide better accuracies on the data-sets than the HMM-taggers.
 
 5. Tagging the NER data had better precision than tagging the POS data (one percent difference) .
+
+6. Improvements in HMM Taggers:
+   We found that most of the mistakes were that the tagger predicted O-tag instead of I-tag,
+   so we will try to normalize the amount of O-tag in purpose,
+   second approach is trying at first the I-tag as an option and only after failure try the O-tag.
+
+7. Improvements in MEMM Taggers:
+   As mentioned, the features that we used for the tagging were more related to the POS data,
+   so one thing that we can change is the features, to be more related to the NER data.
+   For example, capital letters are strongly related to the NER data,
+    and the distance from te last I-tag, since most of the I-tags are separated (from looking at the corpus).
+
+8. Discussion about the F-scores are in the 'ner.txt' file (3.b) .

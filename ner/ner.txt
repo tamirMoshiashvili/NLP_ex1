@@ -15,4 +15,8 @@
        so the same tag may relate to more than one thing.
       Second reason might be that the features we use to predict the tag of each word
        are not helping for the prediction, and relate more to the POS data.
-   b. The span-based F scores are lower than the accuracy scores because
+   b. The span-based F scores are lower than the accuracy scores because every failure on a single tag may
+      affect the whole span and the O-tag appears a lot and the statistics models fail more on single tags that
+      affect the span prediction.
+
+4. Discussion about the improvements in the MEMM taggers are in the 'writeup.pdf' file (7) .

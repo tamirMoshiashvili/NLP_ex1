@@ -1,24 +1,23 @@
 1. create zip for submit of all files
 2. DONE
-3. create and write the 'writeup.pdf' file
+3. CONVERT to PDF
     1. DONE
     2. DONE
     3. DONE
     4. DONE
     5. DONE
-    6. What will you change in the hmm tagger to improve accuracy on the named entities data?
-    7. What will you change in the memm tagger to improve accuracy on the named entities data,
-       on top of what you already did?
-    8. Why are span scores lower than accuracy scores?
+    6. DONE
+    7. DONE
+    8. DONE
 4. DONE
 5. create 'ner.txt' file: (created 'dev_pred_results.txt' which contain the accuracies,
                            I am waiting for Yoav's answer in the piazza)
    1. DONE
    2. DONE
-   3. brief discussion on the Why's:
+   3. DONE
       1. DONE
-      2. The span-based F scores are lower than the accuracy scores. Why?
-   4. brief description about the ways we will use to improve the MEMM-taggers on the NER data
+      2. DONE
+   4. DONE
 6.DONE
 7. DONE (I have it and put it in the zip when we will submit, no need to share it on git)
 8. DONE:
