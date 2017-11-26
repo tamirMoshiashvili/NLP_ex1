@@ -1,0 +1,18 @@
+1. per-token accuracies for the NER data:
+   # GreedyTag:       94.34%
+   # HMMTag:          94.7%
+   # GreedyMaxEntTag: 96.1%
+   # MEMMTag:         97.06%
+
+2. Tagger           precision:  recall:  F:      2*F = F1
+   GreedyTag        78.91%      70.41%   37.2%   74.2%
+   HMMTag           84.66%      73.57%   39.36%  78.72%
+   GreedyMaxEntTag  81.94%      80.34%   40.56%  81.12%
+   MEMMTag          84.57%      86.25%   42.7%   83.4%
+
+3. a. The NER results are lower than the POS result by 10-17% (comparing with the precision-scores).
+      First reason might be that the NER data has significantly less tags,
+       so the same tag may relate to more than one thing.
+      Second reason might be that the features we use to predict the tag of each word
+       are not helping for the prediction, and relate more to the POS data.
+   b. The span-based F scores are lower than the accuracy scores because

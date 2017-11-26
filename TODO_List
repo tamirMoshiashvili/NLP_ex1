@@ -13,10 +13,10 @@
 4. DONE
 5. create 'ner.txt' file: (created 'dev_pred_results.txt' which contain the accuracies,
                            I am waiting for Yoav's answer in the piazza)
-   1. per-toke accuracy of all taggers on the dev-set
-   2. per-span precision, recall and F-measure on the dev-set
+   1. DONE
+   2. DONE
    3. brief discussion on the Why's:
-      1. The NER results are lower than the POS results (how much lower?), look at the data and think why
+      1. DONE
       2. The span-based F scores are lower than the accuracy scores. Why?
    4. brief description about the ways we will use to improve the MEMM-taggers on the NER data
 6.DONE
